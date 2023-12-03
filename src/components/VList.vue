@@ -1,8 +1,9 @@
 <script setup>
-import { ref, watch, defineProps } from 'vue'
-import { Card, Button } from 'ant-design-vue'
+import { ref, watch } from 'vue'
+import { Button } from 'ant-design-vue'
 import { useRoute } from 'vue-router'
 import { fetchData, BASEURL } from '../utils'
+import ListItem from './VListItem.vue'
 
 const route = useRoute()
 const items = ref([])
@@ -26,23 +27,7 @@ watch(route, async () => {
   <div v-if="items.length === 0" class="error">No data</div>
   <div v-else>
     <div class="container">
-      <Card hoverable v-for="(item, i) in items" :key="i" class="item">
-        <template #cover>
-          <img :src="item.image" alt="item_image" class="image" />
-        </template>
-        <a-card-meta :title="item.name" class="label">
-          <template #description>
-            <p>Status: {{ item.status }}</p>
-            <p>Gender: {{ item.gender }}</p>
-          </template>
-        </a-card-meta>
-        <p>Episodes:</p>
-        <div class="episodes">
-          <div v-for="(ep, i) in item.episode" :key="i">
-            <p>{{ ep }}</p>
-          </div>
-        </div>
-      </Card>
+      <ListItem v-for="(item, i) in items" :key="i" :item="item" />
     </div>
     <Button v-show="nextPage !== null" @click="onLoadMore">Загрузить еще</Button>
   </div>
@@ -64,16 +49,7 @@ watch(route, async () => {
   padding-bottom: 1rem;
   padding-top: 1rem;
 }
-.item {
-  margin: 0 auto;
-}
-.image {
-  height: 300px;
-}
-.episodes {
-  height: 90px;
-  overflow-y: auto;
-}
+
 .error {
   display: flex;
   align-items: center;
